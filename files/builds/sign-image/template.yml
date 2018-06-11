@@ -33,9 +33,6 @@ objects:
         env:
         - name: OCP_VERSION
           value: "${VERSION}"
-        from:
-          kind: ImageStreamTag
-          name: ${FROM_IMAGE}
       type: Docker
     triggers:
     - type: ConfigChange
@@ -47,10 +44,6 @@ parameters:
   description: Name Applied to the Resulting ImageStream and BuildConfig
   value: image-sign-scan-base
   required: true
-- description: Image stream tag for the image you'd like to use to build the application
-  name: FROM_IMAGE
-  required: true
-  value: rhel7:7.4
 - name: VERSION
   displayName: OpenShift Container Platform Version
   description: Version of the OpenShift Container Platform
