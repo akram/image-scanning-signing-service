@@ -30,7 +30,7 @@ const (
 	envGpgSecret                = "GPG_SECRET"
 	defaultGpgSignBy            = "openshift@example.com"
 	envGpgSignBy                = "GPG_SIGN_BY"
-	defaultSignScanImage        = "image-management/image-sign-scan-base"
+	defaultSignScanImage        = "image-management/image-sign-scan-base:latest"
 	envSignScanImage            = "SIGN_SCAN_IMAGE"
 )
 
