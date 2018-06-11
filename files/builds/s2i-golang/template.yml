@@ -26,10 +26,7 @@ objects:
         uri: "${SOURCE_REPOSITORY_URL}"
       type: Git
     strategy:
-      dockerStrategy:
-        from:
-          kind: ImageStreamTag
-          name: ${FROM_IMAGE}
+      dockerStrategy: {}
       type: Docker
     triggers:
     - type: ConfigChange
@@ -41,10 +38,6 @@ parameters:
   description: Name Applied to the Resulting ImageStream and BuildConfig
   value: s2i-golang
   required: true
-- description: Image stream tag for the image you'd like to use to build the application
-  name: FROM_IMAGE
-  required: true
-  value: centos:7
 - description: Git branch/tag reference
   name: SOURCE_REPOSITORY_REF
   value: master
