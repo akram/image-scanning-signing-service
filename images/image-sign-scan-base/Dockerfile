@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/rhel7/rhel
+FROM centos:7
 
 ENV OCP_VERSION=3.7
 
