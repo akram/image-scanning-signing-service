@@ -20,9 +20,9 @@ COPY s2i $STI_SCRIPTS_PATH
 #    yum-config-manager --enable rhel-7-server-optional-rpms && \
 #    yum clean all && \
 RUN    INSTALL_PKGS="golang" && \
-    yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS && \
-    rpm -V $INSTALL_PKGS && \
-    yum clean all && \
+    yum install -y $INSTALL_PKGS && \
+    rpm -V $INSTALL_PKGS 
+RUN     yum clean all && \
     useradd -u 1001 -r -g 0 -d ${HOME} -s /sbin/nologin -c "Default Application User" default && \
     mkdir -p ${GOPATH}/{bin,src} && \
     chown -R 1001:0 ${HOME} && \
