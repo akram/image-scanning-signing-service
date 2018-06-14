@@ -52,6 +52,7 @@ pipeline {
 
         script {
           openshift.withCluster() {
+            echo "Build App Name: ${APP_NAME}"
             build = openshift.startBuild("${APP_NAME}", "--from-dir=/tmp/oc-build")
 
             timeout(10) {
