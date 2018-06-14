@@ -27,15 +27,26 @@ pipeline {
           set +x
           # rm -rf oc-build 
           echo $PWD
+          echo "1 pwd"
           pwd
+          echo "2 ls -la"
           ls -la .
+          echo "3 id"
           id
-          ls -la oc-build/ || echo "Directory does not exit"
+          echo "4 ls oc-build"
+          ls -la oc-build/ || echo "Directory does not exist"
+          echo "5 ls oc-build"
           ls -lan
+          echo "6 mkdir"
           mkdir -p oc-build/deployments || echo "Cannot create directory"
-          mkdir -p /tmp/oc-build/deployments
+          echo "7 mkdir2"
+          mkdir -p /tmp/oc-build/deployments || echo "Cannot create directory"
+          echo "8 for loop"
           for t in \$(echo "jar;war;ear" | tr ";" "\\n"); do
+            echo "9 iteration \$t"
             cp -rfv ./target/*.\$t /tmp/oc-build/deployments/ 2> /dev/null || echo "No \$t files"
+            echo "10 iteration \$t"
+            ls -la  /tmp/oc-build/deployments
           done
         """
 
