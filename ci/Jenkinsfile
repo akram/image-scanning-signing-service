@@ -29,8 +29,8 @@ pipeline {
           echo $PWD
           pwd
           ls -la .
-          ls -la oc-build/
           id
+          ls -la oc-build/ || echo "Directory does not exit"
           ls -lan
           mkdir -p oc-build/deployments || echo "Cannot create directory"
           mkdir -p /tmp/oc-build/deployments
