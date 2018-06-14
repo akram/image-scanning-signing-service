@@ -30,15 +30,18 @@ pipeline {
           pwd
           ls -la .
           ls -la oc-build/
-          mkdir -p oc-build/deployments
+          id
+          ls -lan
+          mkdir -p oc-build/deployments || echo "Cannot create directory"
+          mkdir -p /tmp/oc-build/deployments
           for t in \$(echo "jar;war;ear" | tr ";" "\\n"); do
-            cp -rfv ./target/*.\$t oc-build/deployments/ 2> /dev/null || echo "No \$t files"
+            cp -rfv ./target/*.\$t /tmp/oc-build/deployments/ 2> /dev/null || echo "No \$t files"
           done
         """
 
         script {
           openshift.withCluster() {
-            build = openshift.startBuild("${APP_NAME}", "--from-dir=oc-build")
+            build = openshift.startBuild("${APP_NAME}", "--from-dir=/tmp/oc-build")
 
             timeout(10) {
               build.untilEach {
