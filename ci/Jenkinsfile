@@ -165,7 +165,7 @@ pipeline {
           git url: "${SOURCE_CODE_URL}", branch: "${SOURCE_CODE_REF}"
           def namespace = readFile('/var/run/secrets/kubernetes.io/serviceaccount/namespace').trim()
           def token = readFile('/var/run/secrets/kubernetes.io/serviceaccount/token').trim()
-          def ocCmd = "oc --token=${token} --server=${ocpApiServer} --certificate-authority=/run/secrets/kubernetes.io/serviceaccount/ca.crt --namespace=${namespace}"
+          def ocCmd = "oc --token=${token} --server=console.apps.akrambenaissi.com --certificate-authority=/run/secrets/kubernetes.io/serviceaccount/ca.crt --namespace=${namespace}"
           sh """
              set +x
              imageRegistry=\$(${ocCmd} get is ${env.APP_NAME}-dev --template='{{ .status.dockerImageRepository }}' | cut -d/ -f1)
