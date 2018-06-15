@@ -167,17 +167,19 @@ pipeline {
     stage('Promote image to Production Cluster') {
       agent { label 'jenkins-slave-skopeo-centos7' }
       steps {
-        git url: "${SOURCE_CODE_URL}", branch: "${SOURCE_CODE_REF}"
-        def namespace = readFile('/var/run/secrets/kubernetes.io/serviceaccount/namespace').trim()
-        def token = readFile('/var/run/secrets/kubernetes.io/serviceaccount/token').trim()
-        def ocCmd = "oc --token=${token} --server=${ocpApiServer} --certificate-authority=/run/secrets/kubernetes.io/serviceaccount/ca.crt --namespace=${namespace}"
-        sh """
-           set +x
-           imageRegistry=\$(${ocCmd} get is ${env.APP_NAME}-dev --template='{{ .status.dockerImageRepository }}' | cut -d/ -f1)
-           strippedNamespace=\$(echo ${namespace} | cut -d/ -f1)
-           echo "Promoting \${imageRegistry}/${namespace}/${env.APP_NAME} -> \${imageRegistry}/\${strippedNamespace}-prod/${env.APP_NAME}"
-           skopeo --tls-verify=false copy --src-creds openshift:${token} --dest-creds openshift:${token} docker://\${imageRegistry}/${namespace}/${env.APP_NAME} docker://\${imageRegistry}/\${strippedNamespace}-prod/${env.APP_NAME}
-           """
+        script {
+          git url: "${SOURCE_CODE_URL}", branch: "${SOURCE_CODE_REF}"
+          def namespace = readFile('/var/run/secrets/kubernetes.io/serviceaccount/namespace').trim()
+          def token = readFile('/var/run/secrets/kubernetes.io/serviceaccount/token').trim()
+          def ocCmd = "oc --token=${token} --server=${ocpApiServer} --certificate-authority=/run/secrets/kubernetes.io/serviceaccount/ca.crt --namespace=${namespace}"
+          sh """
+             set +x
+             imageRegistry=\$(${ocCmd} get is ${env.APP_NAME}-dev --template='{{ .status.dockerImageRepository }}' | cut -d/ -f1)
+             strippedNamespace=\$(echo ${namespace} | cut -d/ -f1)
+             echo "Promoting \${imageRegistry}/${namespace}/${env.APP_NAME} -> \${imageRegistry}/\${strippedNamespace}-prod/${env.APP_NAME}"
+             skopeo --tls-verify=false copy --src-creds openshift:${token} --dest-creds openshift:${token} docker://\${imageRegistry}/${namespace}/${env.APP_NAME} docker://\${imageRegistry}/\${strippedNamespace}-prod/${env.APP_NAME}
+             """
+        }
       }
     }
   }
