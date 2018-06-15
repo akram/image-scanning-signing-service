@@ -6,24 +6,21 @@ openshift.withCluster() {
 }
 
 pipeline {
-  agent none
+  agent { label 'maven' }
   stages {
     stage('Code Checkout') {
-      agent { label 'maven' }
       steps {
         git url: "${SOURCE_CODE_URL}", branch: "${SOURCE_CODE_REF}"
       }
     }
 
     stage('Code Build') {
-      agent { label 'maven' }
       steps {
         sh "mvn clean package"
       }
     }
 
     stage('Image Build') {
-      agent { label 'maven' }
       steps {
         echo 'Building Image from Jar File'
         sh """
@@ -87,7 +84,6 @@ pipeline {
     }
 
     stage('Sign Image') {
-      agent { label 'maven' }
       steps {
         script {
         def obj = "${APP_NAME}-${env.BUILD_NUMBER}"
@@ -134,7 +130,6 @@ pipeline {
     }
 
     stage('Tag Image') {
-      agent { label 'maven' }
       steps {
         script {
           openshift.withCluster() {
@@ -145,7 +140,6 @@ pipeline {
     }
 
     stage('Rollout Application') {
-      agent { label 'maven' }
       steps {
         script {
           openshift.withCluster() {
