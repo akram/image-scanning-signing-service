@@ -6,21 +6,24 @@ openshift.withCluster() {
 }
 
 pipeline {
-  agent { label 'maven' }
+  agent none
   stages {
     stage('Code Checkout') {
+      agent { label 'maven' }
       steps {
         git url: "${SOURCE_CODE_URL}", branch: "${SOURCE_CODE_REF}"
       }
     }
 
     stage('Code Build') {
+      agent { label 'maven' }
       steps {
         sh "mvn clean package"
       }
     }
 
     stage('Image Build') {
+      agent { label 'maven' }
       steps {
         echo 'Building Image from Jar File'
         sh """
@@ -84,6 +87,7 @@ pipeline {
     }
 
     stage('Sign Image') {
+      agent { label 'maven' }
       steps {
         script {
         def obj = "${APP_NAME}-${env.BUILD_NUMBER}"
@@ -130,6 +134,7 @@ pipeline {
     }
 
     stage('Tag Image') {
+      agent { label 'maven' }
       steps {
         script {
           openshift.withCluster() {
@@ -140,6 +145,7 @@ pipeline {
     }
 
     stage('Rollout Application') {
+      agent { label 'maven' }
       steps {
         script {
           openshift.withCluster() {
@@ -158,11 +164,8 @@ pipeline {
         }
       }
     }
-  }
-  
-  agent { label 'jenkins-slave-skopeo-centos7' }
-  stages {
     stage('Promote image to Production Cluster') {
+      agent { label 'jenkins-slave-skopeo-centos7' }
       steps {
         git url: "${SOURCE_CODE_URL}", branch: "${SOURCE_CODE_REF}"
         def namespace = readFile('/var/run/secrets/kubernetes.io/serviceaccount/namespace').trim()
