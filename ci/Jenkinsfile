@@ -26,35 +26,18 @@ pipeline {
         echo 'Building Image from Jar File'
         sh """
           set +x
-          # rm -rf oc-build 
-          echo $PWD
-          echo "1 pwd"
-          pwd
-          echo "2 ls -la"
-          ls -la .
-          echo "3 id"
-          id
-          echo "4 ls oc-build"
-          ls -la oc-build/ || echo "Directory does not exist"
-          echo "5 ls oc-build"
-          ls -lan
-          echo "6 mkdir"
+          rm -rf oc-build 
           mkdir -p oc-build/deployments || echo "Cannot create directory"
-          echo "7 mkdir2"
-          mkdir -p /tmp/oc-build/deployments || echo "Cannot create directory"
-          echo "8 for loop"
           for t in \$(echo "jar;war;ear" | tr ";" "\\n"); do
             echo "9 iteration \$t"
-            cp -rfv ./target/*.\$t /tmp/oc-build/deployments/ 2> /dev/null || echo "No \$t files"
-            echo "10 iteration \$t"
-            ls -la  /tmp/oc-build/deployments
+            cp -rfv ./target/*.\$t oc-build/deployments/ 2> /dev/null || echo "No \$t files"
           done
         """
 
         script {
           openshift.withCluster() {
             echo "Build App Name: ${APP_NAME}"
-            build = openshift.startBuild("${APP_NAME}", "--from-dir=/tmp/oc-build")
+            build = openshift.startBuild("${APP_NAME}", "--from-dir=oc-build")
 
             timeout(10) {
               build.untilEach {
@@ -91,21 +74,13 @@ pipeline {
 
           openshift.withCluster() {
             def created = openshift.create(openshift.process(template, "-p IMAGE_SIGNING_REQUEST_NAME=${obj} -p IMAGE_STREAM_TAG=${APP_NAME}:${BUILD_APP_TAG}"))
-
             def imagesigningrequest = created.narrow('imagesigningrequest').name();
-
             echo "ImageSigningRequest ${imagesigningrequest.split('/')[1]} Created"
-
             timeout(time: 10, unit: 'MINUTES') {
-
               waitUntil() {
-
                 def isr = openshift.selector("${imagesigningrequest}")
-
                 if(isr.object().status) {
-
                   def phase = isr.object().status.phase
-
                   if(phase == "Failed") {
                     echo "Signing Action Failed: ${isr.object().status.message}"
                     currentBuild.result = "FAILURE"
@@ -120,9 +95,7 @@ pipeline {
                 else {
                   echo "Status is null"
                 }
-
                 return false
-
               }
             }
           }
