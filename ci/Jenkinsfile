@@ -151,7 +151,7 @@ pipeline {
              dst_creds="\$(oc whoami):\$(oc whoami -t)"
              echo "Promoting \${src} -> \${dst}"
              echo "With credentials \${src_creds} -> \${dst_creds}"
-             skopeo --debug --tls-verify=false copy --src-creds \${src_creds} --dest-creds \${dst_creds} \${src} \${dst}
+             skopeo --debug copy --src-tls-verify=false --dest-tls-verify=false --src-creds \${src_creds} --dest-creds \${dst_creds} \${src} \${dst}
              """
         }
       }
