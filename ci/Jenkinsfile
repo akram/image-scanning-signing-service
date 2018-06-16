@@ -67,7 +67,7 @@ pipeline {
       }
     }
 
-    stage('Sign Image') {
+  /*  stage('Sign Image') {
       steps {
         script {
         def obj = "${APP_NAME}-${env.BUILD_NUMBER}"
@@ -102,7 +102,7 @@ pipeline {
         }
       }
     }
-
+*/
     stage('Tag Image') {
       steps {
         script {
@@ -142,11 +142,11 @@ pipeline {
           //def ocCmd = "oc --token=${token} --server=console.apps.akrambenaissi.com --certificate-authority=/run/secrets/kubernetes.io/serviceaccount/ca.crt --namespace=${namespace}"
           sh """
              set +x
-             oc login -u admin -p admin
+             oc login --insecure-skip-tls-verify=false: https://console.apps.akrambenaissi.com:8443 -u admin -p admin
              src_creds="\$(oc whoami):\$(oc whoami -t)"       
              src="docker://docker-registry.default:5000/image-signing-scanning-pipeline/example-application"
 
-             oc login console.prod.akrambenaissi.com -u admin -p admin
+             oc login --insecure-skip-tls-verify=false https://console.prod.akrambenaissi.com:8443 -u admin -p admin
              dst="docker://docker-registry-default.apps.prod.akrambenaissi.com/image-signing-scanning-pipeline/example-application"
              dst_creds="\$(oc whoami):\$(oc whoami -t)"
              echo "Promoting \${src} -> \${dst}"
