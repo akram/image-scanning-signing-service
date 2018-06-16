@@ -143,12 +143,12 @@ pipeline {
           sh """
              set +x
              oc login -u admin -p admin
-             src_creds="$(oc whoami):$(oc whoami -t)"       
+             src_creds="\$(oc whoami):\$(oc whoami -t)"       
              src="docker://docker-registry.default:5000/image-signing-scanning-pipeline/example-application"
 
              oc login console.prod.akrambenaissi.com -u admin -p admin
              dst="docker://docker-registry-default.apps.prod.akrambenaissi.com/image-signing-scanning-pipeline/example-application"
-             dst_creds="$(oc whoami):$(oc whoami -t)"
+             dst_creds="\$(oc whoami):\$(oc whoami -t)"
              echo "Promoting \${src} -> \${dst}"
              skopeo --tls-verify=false copy --src-creds \${src_creds} --dest-creds \${dst_creds} \${src} \${dst}
              """
