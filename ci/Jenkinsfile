@@ -150,6 +150,7 @@ pipeline {
              dst="docker://docker-registry-default.apps.prod.akrambenaissi.com/image-signing-scanning-pipeline/example-application"
              dst_creds="\$(oc whoami):\$(oc whoami -t)"
              echo "Promoting \${src} -> \${dst}"
+             echo "With credentials \${src_creds} -> \${dst_creds}"
              skopeo --debug --tls-verify=false copy --src-creds \${src_creds} --dest-creds \${dst_creds} \${src} \${dst}
              """
         }
