@@ -67,7 +67,7 @@ pipeline {
       }
     }
 
-  /*  stage('Sign Image') {
+    stage('Sign Image') {
       steps {
         script {
         def obj = "${APP_NAME}-${env.BUILD_NUMBER}"
@@ -102,7 +102,7 @@ pipeline {
         }
       }
     }
-*/
+
     stage('Tag Image') {
       steps {
         script {
