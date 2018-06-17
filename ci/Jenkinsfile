@@ -149,6 +149,7 @@ pipeline {
              oc login https://console.prod.akrambenaissi.com:8443 -u admin -p admin --insecure-skip-tls-verify
              dst="docker://docker-registry-default.apps.prod.akrambenaissi.com/image-signing-scanning-pipeline/example-application"
              dst_creds="\$(oc whoami):\$(oc whoami -t)"
+             oc new-project image-signing-scanning-pipeline || echo "Project already existing in production"
              echo "Promoting \${src} -> \${dst}"
              echo "With credentials \${src_creds} -> \${dst_creds}"
              skopeo --debug copy --src-tls-verify=false --dest-tls-verify=false --src-creds \${src_creds} --dest-creds \${dst_creds} \${src} \${dst}
