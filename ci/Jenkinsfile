@@ -144,7 +144,7 @@ pipeline {
              set +x
              oc login  https://console.apps.akrambenaissi.com:8443 -u admin -p admin --insecure-skip-tls-verify
              src_creds="\$(oc whoami):\$(oc whoami -t)"       
-             src="docker://registry-dev.akrambenaissi.com/image-signing-scanning-pipeline/example-application"
+             src="docker://172.30.1.1:5000/image-signing-scanning-pipeline/example-application"
 
              oc login https://console.prod.akrambenaissi.com:8443 -u admin -p admin --insecure-skip-tls-verify
              dst="docker://docker-registry-default.apps.prod.akrambenaissi.com/image-signing-scanning-pipeline/example-application"
