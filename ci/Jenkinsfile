@@ -133,31 +133,6 @@ pipeline {
       }
     }
     
-    /*
-    stage('Promote image to Production Cluster') {
-      agent { label 'jenkins-slave-skopeo-centos7' }
-      steps {
-        script {
-          //git url: "${SOURCE_CODE_URL}", branch: "${SOURCE_CODE_REF}"
-          //def namespace = readFile('/var/run/secrets/kubernetes.io/serviceaccount/namespace').trim()
-          //def token = readFile('/var/run/secrets/kubernetes.io/serviceaccount/token').trim()
-          //def ocCmd = "oc --token=${token} --server=console.apps.akrambenaissi.com --certificate-authority=/run/secrets/kubernetes.io/serviceaccount/ca.crt --namespace=${namespace}"
-          sh """
-             set +x
-             oc login  https://console.apps.akrambenaissi.com:8443 -u admin -p admin --insecure-skip-tls-verify
-             src_creds="\$(oc whoami):\$(oc whoami -t)"       
-             src="docker://registry-dev.akrambenaissi.com/image-signing-scanning-pipeline/example-application"
-
-             oc login https://console.prod.akrambenaissi.com:8443 -u admin -p admin --insecure-skip-tls-verify
-             dst="docker://docker-registry-default.apps.prod.akrambenaissi.com/image-signing-scanning-pipeline/example-application"
-             dst_creds="\$(oc whoami):\$(oc whoami -t)"
-             oc new-project image-signing-scanning-pipeline || echo "Project already existing in production"
-             echo "Promoting \${src} -> \${dst}"
-             echo "With credentials \${src_creds} -> \${dst_creds}"
-             skopeo --debug copy --src-tls-verify=false --dest-tls-verify=false --src-creds \${src_creds} --dest-creds \${dst_creds} \${src} \${dst}
-             """
-        }
-      }
-    }*/
+   
   }
 }
