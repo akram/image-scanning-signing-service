@@ -132,6 +132,8 @@ pipeline {
         }
       }
     }
+    
+    /*
     stage('Promote image to Production Cluster') {
       agent { label 'jenkins-slave-skopeo-centos7' }
       steps {
@@ -156,6 +158,6 @@ pipeline {
              """
         }
       }
-    }
+    }*/
   }
 }
